@@ -1,6 +1,7 @@
 from collections import Counter
 import random
 import pandas as pd
+import datetime
 
 def gestion_des_joueurs():
     liste_joueurs = []
@@ -9,7 +10,7 @@ def gestion_des_joueurs():
 
     #Vérifier que le nombre de joueurs est valide
     if nombre_de_joueurs < 2 or nombre_de_joueurs > 12:
-        nombre_de_joueurs = input("Le nombre de joueurs doit être compris entre 2 et 12. Réessayez.")
+        nombre_de_joueurs = int(input("Le nombre de joueurs doit être compris entre 2 et 12. Réessayez."))
 
     #Demander les noms des joueurs
     for i in range(1,nombre_de_joueurs +1) :
@@ -40,7 +41,7 @@ def gestion_des_joueurs():
     
     match select:
         case 1:
-            mettre_du_jeux = random.choices(liste_joueurs)
+            mettre_du_jeux = random.choice(liste_joueurs)
             print(f"le mette du jeux est:{i,mettre_du_jeux}")
         case 2:
             for i, joueur in enumerate (liste_joueurs,1):
@@ -54,23 +55,109 @@ def gestion_des_joueurs():
                 numero_manager = int(input(f"Joueur {i} [{liste_joueurs[i-1]}] votez le numero du manager:"))
             
                 #Vérifier si le manager fait bien partie des joueurs
-            if numero_manager not in range(1,nombre_de_joueurs +1):
-                numero_manager = int(input("Le joueur choisi n'est pas dans la liste. Choisissez à nouveau."))
+                while numero_manager not in range(1,nombre_de_joueurs +1):
+                    numero_manager = int(input("Le joueur choisi n'est pas dans la liste. Choisissez à nouveau."))
 
-            #Ajouter le manager a la liste de vote
-            liste_vote.append(numero_manager)  
-            vote = Counter(liste_vote)
-            i = range(1,nombre_de_joueurs)
-            for i, count in vote.items():
-                print(f" {i}a été voté {count} fois")
-                
+                #Ajouter le manager a la liste de vote
+                liste_vote.append(numero_manager) 
 
-            
-           
+            #creation d'un counter a la liste de vote
+            vote_counter = Counter(liste_vote) 
+            #choisir la manager avac la plus vote
+            vote = vote_counter.most_common()
+            print(f"Le manager du jeu sélectionné est: {liste_joueurs[vote[0][0] - 1]} avec {vote[0][1]} votes.")
+    return liste_joueurs , nombre_de_joueurs     
+
+def question_par_j(nombre_de_joueurs ):
+    if nombre_de_joueurs == 2:
+        questions_par_joueur = 10
+    elif nombre_de_joueurs == 3:
+        questions_par_joueur = 7
+    elif nombre_de_joueurs == 4:
+        questions_par_joueur = 6
+    elif nombre_de_joueurs == 5:
+        questions_par_joueur = 5
+    elif nombre_de_joueurs == 6:
+        questions_par_joueur = 4
+    elif nombre_de_joueurs == 7:
+        questions_par_joueur = 4
+    elif nombre_de_joueurs == 8:
+        questions_par_joueur = 3
+    elif nombre_de_joueurs == 9:
+        questions_par_joueur = 3
+    elif nombre_de_joueurs == 10:
+        questions_par_joueur = 3
+    elif nombre_de_joueurs == 11:
+        questions_par_joueur = 2
+    else :
+        questions_par_joueur = 2
+    return questions_par_joueur 
+
+# la banque de questions niveau facile
+def ronde_1(liste_joueurs , questions_par_joueur):
+    print("niveau facile")
+    dff = pd.read_csv('banque_de_questions.csv') #dff = data freme facile
+    nomber_questions = len(dff)
+    id = range(1, len(liste_joueurs))
+    for repet in range(1,questions_par_joueur):
+        for id, nom  in enumerate(liste_joueurs,1):
+            ix = random.randint(0,nomber_questions -1)
+            question = dff.loc[ix,'Questions']
+            index = dff.loc[ix,'index']
+            categorie = dff.loc[ix,'Catégorie']
+            print(f"{id} {nom}")
+            print(f" Catégorie _{categorie}_ \n  Question:{question}")     
+    print(repet) 
+    
+
+# la banque de questions niveau moyenne
+def ronde_2(liste_joueurs , questions_par_joueur):
+    print("niveau moyenne")
+    dfm = pd.read_csv('banque_question2.csv') #dfm = data freme moyenne
+    nomber_questions = len(dfm)
+    id = range(1, len(liste_joueurs))
+    for repet in range(1,questions_par_joueur):
+        for id, nom  in enumerate(liste_joueurs,1):
+            ix = random.randint(0,nomber_questions -1)
+            question = dfm.loc[ix,'Question']
+            index = dfm.loc[ix,'index']
+            categorie = dfm.loc[ix,'Catégorie']
+            print(f"{id} {nom}")
+            print(f" Catégorie _{categorie}_ \n  Question:{question}")     
+    print(repet) 
 
 
-        # id_manager = choose_vote(Liste_De_Vote=liste_vote)
+# la banque de questions niveau difficile
+def ronde_3(liste_joueurs , questions_par_joueur):
+    print("niveau difficile")
+    dfd = pd.read_csv('banque_question3.csv') #dfd = data freme difficile
+    nomber_questions = len(dfd)
+    id = range(1, len(liste_joueurs))
+    for repet in range(1,questions_par_joueur):
+        for id, nom  in enumerate(liste_joueurs,1):
+            ix = random.randint(0,nomber_questions -1)
+            question = dfd.loc[ix,'Question']
+            index = dfd.loc[ix,'index']
+            categorie = dfd.loc[ix,'Catégorie']
+            print(f"{id} {nom}")
+            print(f" Catégorie _{categorie}_ \n  Question:{question}")     
+    print(repet)  
 
-gestion_des_joueurs()   
- 
-   
+def time():
+    time = datetime.time(00, 00, 30) 
+    print(time)
+    return  time
+
+
+
+liste_joueurs ,nombre_de_joueurs  = gestion_des_joueurs()   
+questions_par_joueur = question_par_j(nombre_de_joueurs)
+for round in range(1,4,1):
+    match round:
+        case 1:
+            ronde_1(liste_joueurs , questions_par_joueur)
+        case 2:
+            ronde_2(liste_joueurs , questions_par_joueur)
+        case 3:
+            ronde_3(liste_joueurs,questions_par_joueur)
+time()
