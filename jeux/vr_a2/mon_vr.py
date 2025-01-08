@@ -66,7 +66,8 @@ def gestion_des_joueurs():
             #choisir la manager avac la plus vote
             vote = vote_counter.most_common()
             print(f"Le manager du jeu sélectionné est: {liste_joueurs[vote[0][0] - 1]} avec {vote[0][1]} votes.")
-    return liste_joueurs , nombre_de_joueurs     
+    nuveau_de_jeux = int(input("1:facille __2:moyenne __3: dificille\nEntrez le niveau que vous voulez jouer:  "))
+    return liste_joueurs , nombre_de_joueurs , nuveau_de_jeux
 
 def question_par_j(nombre_de_joueurs ):
     if nombre_de_joueurs == 2:
@@ -103,7 +104,7 @@ def ronde_1(liste_joueurs , questions_par_joueur):
         for id, nom  in enumerate(liste_joueurs,1):
             ix = random.randint(0,nomber_questions -1)
             question = dff.loc[ix,'Questions']
-            index = dff.loc[ix,'index']
+            # index = dff.loc[ix,'index']
             categorie = dff.loc[ix,'Catégorie']
             print(f"{id} {nom}")
             print(f" Catégorie _{categorie}_ \n  Question:{question}")     
@@ -143,21 +144,27 @@ def ronde_3(liste_joueurs , questions_par_joueur):
             print(f" Catégorie _{categorie}_ \n  Question:{question}")     
     print(repet)  
 
-def time():
-    time = datetime.time(00, 00, 30) 
-    print(time)
-    return  time
 
 
 
-liste_joueurs ,nombre_de_joueurs  = gestion_des_joueurs()   
+
+# def carte_speciale(joueur, carte_demande, question_en_cours):
+#     # Vérifie si le joueur a la carte demandée
+#     if carte_demande == "changement_de_question":
+#          if "changement_de_question" est dans les cartes de joueur:
+
+
+
+
+liste_joueurs ,nombre_de_joueurs ,nuveau_de_jeux = gestion_des_joueurs()   
 questions_par_joueur = question_par_j(nombre_de_joueurs)
-for round in range(1,4,1):
-    match round:
-        case 1:
-            ronde_1(liste_joueurs , questions_par_joueur)
-        case 2:
-            ronde_2(liste_joueurs , questions_par_joueur)
-        case 3:
-            ronde_3(liste_joueurs,questions_par_joueur)
-time()
+match nuveau_de_jeux:
+    case 1:
+        ronde_1(liste_joueurs , questions_par_joueur)
+    case 2:
+        ronde_2(liste_joueurs , questions_par_joueur)
+    case 3:
+        ronde_3(liste_joueurs,questions_par_joueur)
+
+
+
